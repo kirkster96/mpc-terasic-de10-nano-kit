@@ -1,0 +1,40 @@
+{
+  "@context": [
+    "dtmi:dtdl:context;2"
+  ],
+  "@id": "dtmi:Terasic:FCC:UVC;1",
+  "@type": "Interface",
+  "displayName": {
+    "en": "UVC Camera Feed"
+  },
+  "description" : {
+    "en" : "The USB video device class (also USB video class or UVC) is a USB device class that describes devices capable of capturing still images or streaming video like webcams."
+  },
+  "contents": [
+    {
+      "@id": "dtmi:Terasic:FCC:UVC:blob_uri;1",
+      "@type": "Telemetry",
+      "displayName": {
+        "en": "Image URI"
+      },
+      "description" : {
+        "en" : "Image URI of uploaded image under Azure Blob Storage"
+      },
+      "name": "blob_uri",
+      "schema": "string"
+    },
+    {
+      "@id": "dtmi:Terasic:FCC:UVC:capture_interval;1",
+      "@type": "Property",
+      "displayName": {
+        "en": "Capture Interval"
+      },
+      "description" : {
+        "en" : "Interval in seconds between image capture and upload to Azure Blob Storage"
+      },
+      "name": "capture_interval",
+      "schema": "integer",
+      "writable": true
+    }
+  ]
+}

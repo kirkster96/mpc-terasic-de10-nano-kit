@@ -1,0 +1,7 @@
+azure-iot-device~=2.7.0
+azure-core~=1.17.0
+azure-storage-blob~=12.8.1
+cryptography < 3.5
+ffmpeg-python==0.2.0
+pexpect==4.6.0
+cffi~=1.14.6

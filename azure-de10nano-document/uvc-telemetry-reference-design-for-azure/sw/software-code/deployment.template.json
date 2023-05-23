@@ -1,0 +1,104 @@
+{
+  "$schema-template": "4.0.0",
+  "modulesContent": {
+    "$edgeAgent": {
+      "properties.desired": {
+        "schemaVersion": "1.1",
+        "runtime": {
+          "type": "docker",
+          "settings": {
+            "minDockerVersion": "v1.25",
+            "loggingOptions": "",
+            "registryCredentials": {
+              "de10nanoflex": {
+                "username": "$CONTAINER_REGISTRY_USERNAME_de10nanoflex",
+                "password": "$CONTAINER_REGISTRY_PASSWORD_de10nanoflex",
+                "address": "de10nanoflex.azurecr.io"
+              }
+            }
+          }
+        },
+        "systemModules": {
+          "edgeAgent": {
+            "type": "docker",
+            "settings": {
+              "image": "mcr.microsoft.com/azureiotedge-agent:1.2",
+              "createOptions": {}
+            }
+          },
+          "edgeHub": {
+            "type": "docker",
+            "status": "running",
+            "restartPolicy": "always",
+            "settings": {
+              "image": "azureiotedge/azureiotedge-hub:20210914.16-linux-arm32v7",
+              "createOptions": {
+                "HostConfig": {
+                  "PortBindings": {
+                    "5671/tcp": [
+                      {
+                        "HostPort": "5671"
+                      }
+                    ],
+                    "8883/tcp": [
+                      {
+                        "HostPort": "8883"
+                      }
+                    ],
+                    "443/tcp": [
+                      {
+                        "HostPort": "443"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "modules": {
+          "UvcModule": {
+            "version": "1.0",
+            "type": "docker",
+            "status": "running",
+            "restartPolicy": "always",
+            "settings": {
+              "image": "${MODULES.UvcModule}",
+              "createOptions": {
+                "HostConfig": {
+                  "Binds": [
+                    "/dev/video0:/dev/video0"
+                  ],
+                  "Privileged": true,
+                  "Devices": [
+                    {
+                      "PathOnHost": "/dev/video0",
+                      "PathInContainer": "/dev/video0",
+                      "CgroupPermissions": "rwm"
+                    }
+                  ]
+                }
+              }
+            },
+            "env": {
+              "IOTHUB_DEVICE_CONNECTION_STRING" : {
+                "value": "HostName=de10-nano.azure-devices.net;DeviceId=de10-nano;SharedAccessKey=JJxeyhNgWZuBCxcCf5CoSXW99IlRfQnczzac9TRidpk="
+              }
+            }
+          }
+        }
+      }
+    },
+    "$edgeHub": {
+      "properties.desired": {
+        "schemaVersion": "1.1",
+        "routes": {
+          "UvcModuleToIoTHub": "FROM /messages/modules/UvcModule/* INTO $upstream"
+        },
+        "storeAndForwardConfiguration": {
+          "timeToLiveSecs": 7200
+        }
+      }
+    }
+  }
+}
